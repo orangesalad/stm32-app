@@ -1,0 +1,6 @@
+[submodule "cppreg"]
+	path = cppreg
+	url = https://github.com/sendyne/cppreg.git
+[submodule "stm32-cmake"]
+	path = stm32-cmake
+	url = https://github.com/ObKo/stm32-cmake.git
