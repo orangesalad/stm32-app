@@ -15,3 +15,11 @@ mkdir build && cd build
 cmake ..
 make
 ```
+
+This will result in a file called `app.elf` in the `build` folder. 
+
+Then run `objcopy` on the file to obtain the `.bin` file (which can then be flashed to your MCU)
+
+```
+arm-none-eabi-objcopy -O binary app.elf app.bin
+```
