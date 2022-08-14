@@ -37,3 +37,5 @@ target_link_libraries(app
 )
 
 stm32_print_size_of_target(app)
+stm32_generate_binary_file(app)
+stm32_generate_hex_file(app)
