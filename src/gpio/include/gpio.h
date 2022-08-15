@@ -85,6 +85,7 @@ namespace gpio {
         using pin_set = cppreg::Field<typename gpiox::bsrr, 1u, Pin, cppreg::read_write>;
         using pin_type = cppreg::Field<typename gpiox::otyper, 1u, Pin, cppreg::read_write>;
         using pin_clear = cppreg::Field<typename gpiox::bsrr, 1u, Pin + 16, cppreg::read_write>;
+        using pin_read = cppreg::Field<typename gpiox::odr, 1u, Pin, cppreg::read_write>;
 
         // // We can now define the static methods of the interface.
         // // The pin output direction is set in the init method.
@@ -92,18 +93,25 @@ namespace gpio {
             pin_set::write(1U);
         };
         inline static void off() {
-            pin_clear::write(1u);
+            pin_clear::write(1U);
         };
-        // inline static void toggle() {
-        //     pin_toggle::set();   // Set PTOR to 1.
-        // };
+        inline static void toggle() {
+            if(pin_read::is_set())
+            {
+                pin_clear::write(1U);
+            }
+            else
+            {
+                pin_set::write(1U);
+            }
+        };       
         inline static void init() {
             off();
             pin_direction::write(1U);
             pin_speed::write(speed);
             pin_type::write(type);
             pin_pull::write(pull);
-        };        
+        };
     };
 }
 

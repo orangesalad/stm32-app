@@ -27,9 +27,7 @@ using green_led = gpio::DigitalOut<gpio::GpioPort::PORTA, 5>;
     uint32_t blink_period = 100;
     for(;;)
     {
-        green_led::on();
-        HAL_Delay(blink_period);
-        green_led::off();
+        green_led::toggle();
         HAL_Delay(blink_period);
     }
 
