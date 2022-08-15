@@ -3,8 +3,7 @@ extern "C"
 #include <stm32l4xx_hal.h>
 }
 
-#define LED_PIN GPIO_PIN_5
-#define LED_PORT GPIOA
+#include <gpio.h>
 
 //This prevent name mangling for functions used in C/assembly files.
 extern "C"

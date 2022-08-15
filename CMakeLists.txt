@@ -20,11 +20,10 @@ find_package(HAL COMPONENTS
 # Libs
 add_subdirectory(cppreg)
 
+# Local
 add_subdirectory(src)
 
-add_executable(app main.cpp)
-target_link_libraries(app 
-    module1 
+    gpio_lib
     cppreg
     HAL::STM32::L4::RCC
     HAL::STM32::L4::CORTEX
