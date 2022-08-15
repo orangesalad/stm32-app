@@ -7,7 +7,13 @@ namespace gpio {
 
     enum GpioPort: std::uint32_t
     {
-        PORTA = 0x48000000
+        PORTA = 0x48000000,
+        PORTB = 0x48000400,
+        PORTC = 0x48000800,
+        PORTD = 0x48000C00,
+        PORTE = 0x48001000,
+        PORTF = 0x48001400,
+        PORTG = 0x48001800
     };
 
     enum GpioSpeed
