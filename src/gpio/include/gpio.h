@@ -82,9 +82,9 @@ namespace gpio {
         using pin_direction = cppreg::Field<typename gpiox::moder, 2u, Pin*2, cppreg::read_write>;
         using pin_speed = cppreg::Field<typename gpiox::ospeedr, 2u, Pin*2, cppreg::read_write>;
         using pin_pull = cppreg::Field<typename gpiox::pupdr, 2u, Pin*2, cppreg::read_write>;
-        using pin_set = cppreg::Field<typename gpiox::bsrr, 1u, Pin, cppreg::read_write>;
+        using pin_set = cppreg::Field<typename gpiox::bsrr, 1u, Pin, cppreg::write_only>;
         using pin_type = cppreg::Field<typename gpiox::otyper, 1u, Pin, cppreg::read_write>;
-        using pin_clear = cppreg::Field<typename gpiox::bsrr, 1u, Pin + 16, cppreg::read_write>;
+        using pin_clear = cppreg::Field<typename gpiox::bsrr, 1u, Pin + 16, cppreg::write_only>;
         using pin_read = cppreg::Field<typename gpiox::odr, 1u, Pin, cppreg::read_write>;
 
         // // We can now define the static methods of the interface.
