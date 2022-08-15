@@ -19,16 +19,28 @@ void initClock();
 int main(void)
 {
 using green_led = gpio::DigitalOut<gpio::GpioPort::PORTA, 5>;
+using input = gpio::DigitalIn<gpio::GpioPort::PORTA, 0U, gpio::GpioPull::PULL_UP>;
 
     HAL_Init();
     initClock();
+    
     __HAL_RCC_GPIOA_CLK_ENABLE();
     green_led::init();
+    input::init();
+
     uint32_t blink_period = 100;
     for(;;)
     {
         green_led::toggle();
         HAL_Delay(blink_period);
+        if( input::read() )
+        {
+            blink_period = 1000;
+        }
+        else
+        {
+            blink_period = 100;
+        }
     }
 
     return 0;
