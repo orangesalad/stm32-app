@@ -16,30 +16,21 @@ extern "C"
 
 void initClock();
 
-void initGPIO()
-{
-    GPIO_InitTypeDef GPIO_Config;
-
-    GPIO_Config.Mode = GPIO_MODE_OUTPUT_PP;
-    GPIO_Config.Pull = GPIO_NOPULL;
-    GPIO_Config.Speed = GPIO_SPEED_FREQ_HIGH;
-
-    GPIO_Config.Pin = LED_PIN;
-    
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-    HAL_GPIO_Init(LED_PORT, &GPIO_Config);
-}
-
 int main(void)
 {
+using green_led = gpio::DigitalOut<gpio::GpioPort::PORTA, 5>;
+
     HAL_Init();
     initClock();
-    initGPIO();
-    
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    green_led::init();
+    uint32_t blink_period = 100;
     for(;;)
     {
-        HAL_Delay(1000);
-        HAL_GPIO_TogglePin(LED_PORT, LED_PIN);
+        green_led::on();
+        HAL_Delay(blink_period);
+        green_led::off();
+        HAL_Delay(blink_period);
     }
 
     return 0;
