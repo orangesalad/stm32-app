@@ -113,6 +113,28 @@ namespace gpio {
             pin_pull::write(pull);
         };
     };
+
+    template <  GpioPort Port, 
+                std::uint8_t Pin,
+                GpioPull pull = GpioPull::NO_PULL
+                >
+    struct DigitalIn
+    {
+        using gpiox = gpio_base<Port>;
+
+        using pin_direction = cppreg::Field<typename gpiox::moder, 2u, Pin*2, cppreg::read_write>;
+        using pin_pull = cppreg::Field<typename gpiox::pupdr, 2u, Pin*2, cppreg::read_write>;
+        using pin_read = cppreg::Field<typename gpiox::idr, 1u, Pin, cppreg::read_only>;
+
+        inline static bool read() {
+            return pin_read::is_set();
+        };
+
+        inline static void init() {
+            pin_direction::write(0U);
+            pin_pull::write(pull);
+        };
+    };
 }
 
 #endif
