@@ -5,6 +5,11 @@
 
 namespace gpio {
 
+    enum GpioPort: std::uint32_t
+    {
+        PORTA = 0x48000000
+    };
+
     /**
      * @brief gpio_base
      * 
@@ -31,6 +36,44 @@ namespace gpio {
         using ascr      = cppreg::PackedRegister<gpio_pack, cppreg::RegBitSize::b32, 11 * 32>;
     };
 
+    /**
+     * @brief DigitalOut
+     * 
+     * @tparam Port
+     * @tparam Pin 
+     */
+    template < GpioPort Port, std::uint8_t Pin>
+    struct DigitalOut
+    {
+        using gpiox = gpio_base<Port>;
+        // //moder == 0b01
+        // //ospeedr == 0b00
+        // //pupdr == 0b00
+        // //bssr -> 0-15 = set, 16-31 = reset
+        using pin_direction = cppreg::Field<typename gpiox::moder, 2u, Pin*2, cppreg::read_write>;
+        using pin_speed = cppreg::Field<typename gpiox::ospeedr, 2u, Pin*2, cppreg::read_write>;
+        using pin_pull = cppreg::Field<typename gpiox::pupdr, 2u, Pin*2, cppreg::read_write>;
+        using pin_set = cppreg::Field<typename gpiox::bsrr, 1u, Pin, cppreg::read_write>;
+        using pin_clear = cppreg::Field<typename gpiox::bsrr, 1u, Pin + 16, cppreg::read_write>;
+
+        // // We can now define the static methods of the interface.
+        // // The pin output direction is set in the init method.
+        inline static void on() {
+            pin_set::write(1U);
+        };
+        inline static void off() {
+            pin_clear::write(1u);
+        };
+        // inline static void toggle() {
+        //     pin_toggle::set();   // Set PTOR to 1.
+        // };
+        inline static void init() {
+            off();
+            pin_direction::write(1U);
+            pin_speed::write(0U);
+            pin_pull::write(0U);
+        };        
+    };
 }
 
 #endif
