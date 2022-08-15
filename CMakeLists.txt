@@ -23,6 +23,7 @@ add_subdirectory(cppreg)
 # Local
 add_subdirectory(src)
 
+SET(CMAKE_CXX_FLAGS  "-g3 -ggdb")
     gpio_lib
     cppreg
     HAL::STM32::L4::RCC
