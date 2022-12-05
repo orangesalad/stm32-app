@@ -1,6 +1,11 @@
 #ifndef __GPIO_H
 #define __GPIO_H
 
+extern "C"
+{
+#include <stm32l4xx_hal.h>
+}
+
 #include <cppreg.h>
 
 namespace gpio {
@@ -111,8 +116,10 @@ namespace gpio {
                 pin_set::write(1U);
             }
         };       
-        inline static void init() {
+        inline static void init() {         
             off();
+            uint32_t offset = ((static_cast<uint32_t>(Port) - 0x48000000) / 0x400);
+            RCC->AHB2ENR |= 1U << offset;   
             pin_direction::write(1U);
             pin_speed::write(speed);
             pin_type::write(type);
@@ -130,6 +137,7 @@ namespace gpio {
 
         using pin_direction = cppreg::Field<typename gpiox::moder, 2u, Pin*2, cppreg::read_write>;
         using pin_pull = cppreg::Field<typename gpiox::pupdr, 2u, Pin*2, cppreg::read_write>;
+        using pin_clear = cppreg::Field<typename gpiox::bsrr, 1u, Pin + 16, cppreg::write_only>;
         using pin_read = cppreg::Field<typename gpiox::idr, 1u, Pin, cppreg::read_only>;
 
         inline static bool read() {
@@ -137,9 +145,23 @@ namespace gpio {
         };
 
         inline static void init() {
+            // Set pin low to prevent any noise
+            pin_clear::write(1U);
+            // Enable GPIOx clock
+            uint32_t offset = ((static_cast<uint32_t>(Port) - 0x48000000) / 0x400);
+            RCC->AHB2ENR |= 1U << offset;
+            // Direction output
             pin_direction::write(0U);
             pin_pull::write(pull);
         };
+    };
+
+    class gpio
+    {
+    public:
+
+    private:
+
     };
 }
 

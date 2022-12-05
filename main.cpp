@@ -4,27 +4,47 @@ extern "C"
 }
 
 #include <gpio.h>
-
-//This prevent name mangling for functions used in C/assembly files.
-extern "C"
-{
-    void SysTick_Handler(void)
-    {
-        HAL_IncTick();
-    }
-}
+#include <interrupt.h>
+#include <cstring>
 
 void initClock();
 
+extern "C"
+{
+extern unsigned long _estack;
+
+void handler_reset()
+{
+    while(1)
+    {}
+}
+
+void handler_default()
+{
+    while(1)
+    {}
+}
+
+void exti95_handler()
+{
+
+}
+
+}
+
 int main(void)
 {
+// LD2 on Nucleo-64
 using green_led = gpio::DigitalOut<gpio::GpioPort::PORTA, 5>;
-using input = gpio::DigitalIn<gpio::GpioPort::PORTA, 0U, gpio::GpioPull::PULL_UP>;
+// USER BUTTON on Nucleo-64
+using input = gpio::DigitalIn<gpio::GpioPort::PORTC, 13U, gpio::GpioPull::NO_PULL>;
+
+    nvic<107> interrupts;
+    interrupts.register_callback(15, (uint32_t)&HAL_IncTick);
 
     HAL_Init();
     initClock();
-    
-    __HAL_RCC_GPIOA_CLK_ENABLE();
+
     green_led::init();
     input::init();
 

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.16)
 set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/stm32-cmake/cmake/stm32_gcc.cmake)
 set(STM32_CUBE_L4_PATH ${CMAKE_CURRENT_SOURCE_DIR}/STM32CubeL4)
 
@@ -30,6 +30,7 @@ add_executable(${PROJECT_NAME} main.cpp)
 
 target_link_libraries(${PROJECT_NAME}
     gpio_lib
+    nvic_lib
     cppreg
     HAL::STM32::L4::RCC
     HAL::STM32::L4::CORTEX
@@ -37,9 +38,11 @@ target_link_libraries(${PROJECT_NAME}
     HAL::STM32::L4::PWR
     HAL::STM32::L4::PWREx
     HAL::STM32::L4::FLASH
-    CMSIS::STM32::L476RG
+    CMSIS::STM32::L476xx
     STM32::NoSys    
 )
+
+stm32_add_linker_script(${PROJECT_NAME} PRIVATE my-linker-script.ld)
 
 stm32_print_size_of_target(${PROJECT_NAME})
 stm32_generate_binary_file(${PROJECT_NAME})
